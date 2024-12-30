@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday!</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            color: white;
+            text-align: center;
+        }
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 60%;
+            padding: 20px;
+        }
+        .button-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .button {
+            background-color: #ff6f61;
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: transform 0.2s;
+        }
+        .button:hover {
+            transform: scale(1.1);
+            background-color: #ff4b47;
+        }
+        .hidden {
+            display: none;
+        }
+        #birthdayAnimation {
+            margin-top: 20px;
+        }
+        #clips-section {
+            width: 40%;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.85);
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            margin-left: 20px;
+            text-align: center;
+        }
+        #clips-section h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #ff6f61;
+        }
+        .clip-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        iframe {
+            width: 100%;
+            height: 300px;
+            border: none;
+            background-color: #000;
+        }
+        .counter-container {
+            margin-top: 20px;
+        }
+        .counter-button {
+            margin-top: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .counter-button:hover {
+            transform: scale(1.1);
+        }
+        .gif-container img {
+            margin-top: 20px;
+            width: 200px;
+            height: auto;
+        }
+        @media (min-width: 1200px) {
+            iframe {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div style="display: flex; width: 100%; max-width: 1400px;">
+    <div class="main-container">
+        <div class="button-container">
+            <h1 id="revealMessage">Click the button to reveal your surprise!</h1>
+            <button class="button" onclick="revealBirthday()">Click Me!</button>
+            <div id="birthdayAnimation" class="hidden">
+                <h1 style="font-size: 3em; margin-top: 20px;">🎉 Happy Birthday! 🎉</h1>
+                <canvas id="confettiCanvas"></canvas>
+                <div class="counter-container">
+                    <p id="clickCounter">Times clicked: 0</p>
+                    <button class="counter-button" onclick="incrementCounter()">Smash Ctrix!</button>
+                    <div class="gif-container">
+                        <img id="clickGif" src="" alt="Click GIF" class="hidden">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="clips-section" class="hidden">
+        <h2>Some of Your Best Clips This Year</h2>
+        <div class="clip-container">
+            <iframe src="https://outplayed.tv/valorant/d7ekgG" allowfullscreen></iframe>
+            <iframe src="https://outplayed.tv/valorant/rdwDWB" allowfullscreen></iframe>
+            <iframe src="https://outplayed.tv/media/3PWg42" allowfullscreen></iframe>
+        </div>
+    </div>
+</div>
+
+    <script>
+        function revealBirthday() {
+            // Hide the "Click the button to reveal your surprise!" message
+            const revealMessage = document.getElementById('revealMessage');
+            revealMessage.style.display = 'none';
+
+            // Remove the button
+            const button = document.querySelector('.button-container .button');
+            button.remove();
+
+            // Show the birthday animation and clips section
+            const animationDiv = document.getElementById('birthdayAnimation');
+            const clipsSection = document.getElementById('clips-section');
+            animationDiv.classList.remove('hidden'); // Show the birthday animation
+            clipsSection.classList.remove('hidden'); // Show the clips section
+            startConfetti();
+        }
+
+        let clickCount = 0;
+
+        function incrementCounter() {
+            clickCount++;
+            document.getElementById('clickCounter').innerText = `Times clicked: ${clickCount}`;
+
+            // Display the GIF each time the button is clicked
+            const gif = document.getElementById('clickGif');
+            gif.src = "https://cdn.discordapp.com/attachments/1229054041258987581/1266783437554061424/XjfympQ.gif?ex=677368c3&is=67721743&hm=f7c7d9196a8006785f0542f495b9cbf5c7a6fb55f12071ad8ad6eb6409bbfd23&";
+            gif.classList.remove('hidden');
+        }
+
+        // Confetti Animation
+        function startConfetti() {
+            const canvas = document.getElementById('confettiCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth * 0.6;
+            canvas.height = 200;
+
+            const particles = [];
+            for (let i = 0; i < 150; i++) {
+                particles.push(createParticle());
+            }
+
+            function createParticle() {
+                return {
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 5 + 2,
+                    color: `hsl(${Math.random() * 360}, 70%, 60%)`,
+                    velocityX: Math.random() * 2 - 1,
+                    velocityY: Math.random() * 2 - 1
+                };
+            }
+
+            function drawParticles() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach((p) => {
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+            }
+
+            function updateParticles() {
+                particles.forEach((p) => {
+                    p.x += p.velocityX;
+                    p.y += p.velocityY;
+
+                    if (p.x < 0 || p.x > canvas.width || p.y < 0 || p.y > canvas.height) {
+                        Object.assign(p, createParticle());
+                    }
+                });
+            }
+
+            function loop() {
+                drawParticles();
+                updateParticles();
+                requestAnimationFrame(loop);
+            }
+
+            loop();
+        }
+    </script>
+</body>
+</html>
